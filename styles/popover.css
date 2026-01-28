@@ -1,0 +1,85 @@
+/* popover.css */
+
+.popover-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    width: 400px;
+    height: auto;
+    background: transparent;
+    backdrop-filter: blur(5px);
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    z-index: 10;
+    padding: 10px;
+}
+
+.hidden-panel {
+    display: none;
+}
+
+.floating-search-box input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: center;
+    border-bottom: 1px solid var(--color-hover);
+    color: var(--color-hover);
+    padding: 8px;
+    outline: none;
+    font-family: serif;
+    font-size: var(--text-size-body);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: text;
+    margin-bottom: 15px;
+}
+
+.floating-results-list {
+    list-style: none;
+    margin: 10px 0 0 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.floating-result-item {
+    padding: 8px;
+    border-bottom: 1px solid var(--color-idle);
+    cursor: default;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: serif;
+    font-size: var(--text-size-body);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-idle);
+    margin-bottom: 5px;
+}
+
+.floating-result-item:hover {
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    color: var(--color-hover);
+    border-bottom: 1px solid var(--color-hover);
+}
+
+.floating-result-item:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.result-type {
+    background: transparent;
+    color: var(--color-hover);
+    border: 1px solid var(--color-hover);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.popover-wrapper {
+    position: absolute;
+}

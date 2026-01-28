@@ -1,0 +1,339 @@
+/* inventory.css */
+
+#inventory-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+}
+
+
+
+#bag-container {
+    border: 1px solid var(--color-idle);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 800px;
+}
+
+#bag-container:hover {
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    color: var(--color-hover);
+    border-bottom: 1px solid var(--color-hover);
+}
+
+#bag-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+    min-height: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.bag-item-row {
+    display: grid;
+    grid-template-columns: 200px 100px 80px 120px;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    border-bottom: 1px solid var(--color-idle);
+    min-height: 50px;
+    max-height: 100px;
+}
+
+.bag-item-row:hover {
+    border-bottom: 1px solid var(--color-hover);
+    background: rgba(0, 0, 0, 0.02);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bag-item-row .item-name {
+    font-family: serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-idle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+    cursor: default;
+}
+
+.bag-item-row .item-type {
+    background: transparent;
+    color: var(--color-hover);
+    border: 1px solid var(--color-hover);
+    padding: 5px 0px;
+    border-radius: 3px;
+    text-align: center;
+    cursor: default;
+}
+
+.item-quantity-controls,
+.item-durability-controls {
+    cursor: default;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-family: serif;
+    font-size: 16px;
+    color: var(--color-idle);
+}
+
+.quantity-button,
+.durability-button {
+    background: none;
+    border: none;
+    color: var(--color-idle);
+    width: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.2s;
+    cursor: default;
+}
+
+.quantity-button:hover,
+.durability-button:hover {
+    color: var(--color-hover);
+}
+
+.bag-item-row:hover .item-name,
+.bag-item-row:hover .quantity-value,
+.bag-item-row:hover .durability-value {
+    color: var(--color-hover);
+}
+
+.bag-item-row:hover .item-type {
+    opacity: 0.8;
+    color: var(--color-hover);
+}
+
+#add-item-trigger {
+    background: transparent;
+    border: 1px solid var(--color-idle);
+    color: var(--color-idle);
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: default;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    margin-top: 0px;
+}
+
+#add-item-trigger:hover {
+    border-color: var(--color-hover);
+    color: var(--color-hover);
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.durability-spacer {
+    width: 120px;
+}
+
+
+
+#coins-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.coin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    height: 98px;
+    width: 100px;
+    gap: 5px;
+    border: 1px solid var(--color-idle);
+    padding: 10px;
+    transition: all 0.2s;
+}
+
+.coin-container img {
+    width: 30px;
+    height: 30px;
+}
+
+.coin-container .value {
+    font-size: 22px;
+    letter-spacing: 1px;
+    font-family: serif;
+    color: var(--color-idle);
+    cursor: default;
+}
+
+.coin-container .coin-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+}
+
+.coin-container button {
+    border: none;
+    background: none;
+    padding: 0 8px;
+    color: var(--color-idle);
+    font-weight: bold;
+    cursor: default;
+}
+
+.coin-container:hover {
+    border: 1px solid var(--color-hover);
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.coin-container:hover .value,
+.coin-container:hover .name,
+.coin-container:hover button {
+    color: var(--color-hover);
+}
+
+.empty-button {
+    font-size: 12px;
+    margin-top: -5px;
+    opacity: 0.7;
+}
+
+.empty-button:hover {
+    opacity: 1;
+}
+
+
+
+#equipment-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 600px;
+}
+
+.equipment-slot-row {
+    display: grid;
+    grid-template-columns: 30px 130px 300px 100px 40px;
+    align-items: center;
+    gap: 0;
+    padding: 5px;
+    border-bottom: 1px solid var(--color-idle);
+    min-height: 35px;
+    transition: all 0.2s;
+    cursor: default;
+}
+
+.equipment-slot-row:hover {
+    border-bottom: 1px solid var(--color-hover);
+    background: rgba(0, 0, 0, 0.02);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.equipment-slot-row .slot-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+}
+
+.equipment-slot-row .slot-label {
+    font-family: serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--color-idle);
+    text-transform: uppercase;
+}
+
+.equipment-slot-row .equipped-item-name {
+    font-family: serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-idle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+    text-align: center;
+}
+
+.equipment-slot-row .slot-empty {
+    opacity: 0.3;
+}
+
+.durability-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.durability-adjuster {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: serif;
+    font-size: 14px;
+    color: var(--color-idle);
+}
+
+.dur-btn {
+    background: none;
+    border: none;
+    color: var(--color-idle);
+    font-weight: bold;
+    cursor: default;
+    transition: color 0.2s;
+}
+
+.dur-btn:hover {
+    color: var(--color-hover);
+}
+
+.dur-value-static {
+    font-family: serif;
+    font-size: 14px;
+    color: var(--color-idle);
+    opacity: 0.6;
+}
+
+.equipment-slot-row:hover .slot-label,
+.equipment-slot-row:hover .equipped-item-name,
+.equipment-slot-row:hover .dur-value-static,
+.equipment-slot-row:hover .durability-adjuster {
+    color: var(--color-hover);
+}
+
+.remove-equip {
+    background: transparent;
+    border: none;
+    color: var(--color-idle);
+    font-size: 14px;
+    cursor: default;
+    opacity: 0.5;
+    transition: all 0.2s;
+}
+
+.remove-equip:hover {
+    color: var(--color-hover);
+    opacity: 1;
+}

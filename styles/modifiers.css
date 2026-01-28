@@ -1,0 +1,220 @@
+/* modifiers.css */
+
+#modifiers-list-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    width: 620px;
+    height: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-left: 40px;
+    padding-left: 40px;
+}
+
+.modifier-container {
+    padding: 5px 30px;
+    width: 600px;
+    cursor: default;
+    color: var(--color-idle);
+    position: relative;
+}
+.modifier-container::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--color-idle), transparent);
+    z-index: 2;
+}
+
+.modifier-container:hover {
+    color: var(--color-hover);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.modifier-container:hover::before {
+    background: linear-gradient(to bottom, transparent, var(--color-hover), transparent);
+}
+
+.modifier-container .name-visualization {
+    font-size: 20px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: auto;
+    padding: 5px 0px;
+    padding-bottom: 15px;
+}
+
+.modifier-container .description-visualization {
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    min-height: 50px;
+    padding: 15px;
+    padding-top: 5px;
+}
+
+
+#add-modifier-button {
+    border: 1px solid var(--color-idle);
+    padding: 10px 10px;
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+    cursor: default;
+    color: var(--color-idle);
+}
+#add-modifier-button:hover {
+    border: 1px solid var(--color-hover);
+    color: var(--color-hover);
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
+}
+#add-modifier-button:active {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+
+
+
+
+.modifier-container .name-customization {
+    flex: 2;
+}
+
+.modifier-container .name-customization input {
+    background: transparent;
+    border: none;
+    color: var(--color-idle);
+    font-size: 20px;
+    font-family: serif;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-transform: uppercase;
+    outline: none;
+    width: 100%;
+    padding: 5px 0;
+    cursor: default;
+}
+.modifier-container .name-customization:focus-within, .modifier-container .name-customization:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    color: var(--color-hover);
+}
+.modifier-container .name-customization:focus-within input, .modifier-container .name-customization:hover input{
+    color: var(--color-hover);
+}
+
+.modifier-container .description-customization textarea {
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    min-height: 50px;
+    padding: 15px;
+    padding-top: 0px;
+    background: transparent;
+    font-family: serif;
+    border: none;
+    height: auto;
+    color: var(--color-idle);
+    width: 100%;
+    margin-top: 15px;
+    outline: none;
+    resize: none;
+    cursor: default;
+    overflow: hidden;
+}
+.modifier-container .description-customization:focus-within, .modifier-container .description-customization:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    color: var(--color-hover);
+}
+.modifier-container .description-customization:focus-within textarea, .modifier-container .description-customization:hover textarea {
+    color: var(--color-hover);
+}
+
+.modifier-container .delete-button {
+    border: none;
+    color: var(--color-idle);
+    background: none;
+    padding: 5px;
+}
+.modifier-container .delete-button:hover {
+    color: var(--color-hover);
+}
+
+.effects-customization-list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.effect-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.effect-row .identifier-customization {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-idle);
+    text-transform: uppercase;
+    font-size: 14px;
+    outline: none;
+    width: 150px;
+    height: 35px;
+    padding-left: 15px;
+    font-family: serif;
+}
+.effect-row .identifier-customization:hover, .effect-row .identifier-customization:focus {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    color: var(--color-hover);
+}
+
+.effect-row .value-visualization {
+    min-width: 30px;
+    text-align: center;
+    vertical-align: bottom;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--color-idle);
+}
+
+.effect-row button {
+    border: none;
+    color: var(--color-idle);
+    background: none;
+    font-weight: bold;
+    padding: 5px;
+}
+.effect-row button:hover {
+    color: var(--color-hover);
+}
+
+.add-button {
+    border: 1px solid var(--color-idle);
+    text-align: center;
+    padding: 5px;
+    cursor: default;
+    font-weight: bold;
+    color: var(--color-idle);
+    font-size: 14px;
+    margin-top: 5px;
+    width: 150px;
+}
+
+.add-button:hover {
+    border: 1px solid var(--color-hover);
+    color: var(--color-hover);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+.add-button:active {
+    background: rgba(0, 0, 0, 0.03);
+}
