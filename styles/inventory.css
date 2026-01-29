@@ -71,6 +71,9 @@
     padding-left: 10px;
     cursor: default;
 }
+.bag-item-row .item-name:hover {
+    text-decoration: underline;
+}
 
 .bag-item-row .item-type {
     background: transparent;
@@ -275,6 +278,10 @@
     text-overflow: ellipsis;
     padding-left: 10px;
     text-align: center;
+}
+
+.equipment-slot-row .equipped-item-name:hover {
+    text-decoration: underline;
 }
 
 .equipment-slot-row .slot-empty {

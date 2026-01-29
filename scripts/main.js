@@ -900,14 +900,14 @@ function renderInventory() {
     `;
 
     renderEquipment();
-    renderBagItems();
+    renderBag();
     renderCoins();
 
     const validTypes = Object.keys(Codex.ENTRY_TYPES).filter(t => t !== 'character');
     initializeFloatingSearch('#add-item-trigger', '#inventory-search-panel', validTypes, (dbEntry) => {
         PAGE_ENTRY.pick({ reference: dbEntry, amount: 1 });
         showSaveButton();
-        renderBagItems();
+        renderBag();
     }, { searchInArchive: true });
 }
 
@@ -965,7 +965,7 @@ function coinContainer(coinName) {
     return container;
 }
 
-function renderBagItems() {
+function renderBag() {
     const listContainer = document.querySelector('#bag-list');
     if (!listContainer || !PAGE_ENTRY.bag) return;
     listContainer.innerHTML = '';
@@ -991,18 +991,23 @@ function renderBagItems() {
                 <div class="item-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${reference.name}</div>
                 <div class="item-type" style="opacity: 0.5; font-size: 0.85em; text-align: center;">${translate(reference.type, 'uppercase')}</div>
                 <div class="item-quantity-controls" style="display: flex; justify-content: center; align-items: center; gap: 5px;">
-                    ${isHovering ? `<button class="quantity-button" data-action="minus" style="cursor:pointer;">${(!isStackable || itemSlot.amount <= 1) ? '<i class="fa-solid fa-trash"></i>' : '<'}</button>` : ''}
+                    ${isHovering ? `<button class="quantity-button" data-action="minus" >${(!isStackable || itemSlot.amount <= 1) ? '<i class="fa-solid fa-trash"></i>' : '<'}</button>` : ''}
                     <span class="qty-value">${itemSlot.amount ?? 1}</span>
-                    ${isHovering && isStackable ? `<button class="quantity-button" data-action="plus" style="cursor:pointer;">></button>` : ''}
+                    ${isHovering && isStackable ? `<button class="quantity-button" data-action="plus">></button>` : ''}
                 </div>
                 <div class="item-durability-controls" style="display: flex; justify-content: center; align-items: center; gap: 5px;">
                     ${hasDurability ? `
-                        ${isHovering ? `<button class="durability-button" data-action="minus" style="cursor:pointer;"><</button>` : ''}
+                        ${isHovering ? `<button class="durability-button" data-action="minus"><</button>` : ''}
                         <span class="dur-value">${itemSlot.durability}/${maxDur}</span>
-                        ${isHovering ? `<button class="durability-button" data-action="plus" style="cursor:pointer;">></button>` : ''}
+                        ${isHovering ? `<button class="durability-button" data-action="plus">></button>` : ''}
                     ` : '<div style="flex:1"></div>'}
                 </div>
             `;
+
+            itemRow.querySelector('.item-name').onclick = async (e) => {
+                e.stopPropagation();
+                searchEntry(await Archive.fetch(reference.key));
+            };
 
             if (isHovering) {
                 itemRow.querySelectorAll('.quantity-button').forEach(btn => {
@@ -1012,7 +1017,7 @@ function renderBagItems() {
                         else {
                             if (!isStackable || (itemSlot.amount || 1) <= 1) {
                                 PAGE_ENTRY.drop(itemSlot, 1);
-                                renderBagItems();
+                                renderBag();
                                 showSaveButton();
                                 return;
                             }
@@ -1089,6 +1094,13 @@ function renderEquipment() {
                 </div>
             `;
 
+            slotRow.querySelector('.equipped-item-name').onclick = async (e) => {
+                e.stopPropagation();
+                if (equippedItem) {
+                    searchEntry(await Archive.fetch(equippedItem.reference.key));
+                }
+            };
+
             slotRow.onclick = async (e) => {
                 e.stopPropagation();
                 const triggerId = `trigger-${slotName}`;
@@ -1139,7 +1151,7 @@ function renderEquipment() {
             renderStatuses();
             renderFields();
             renderEquipment();
-            renderBagItems();
+            renderBag();
         };
 
         slotRow.onmouseenter = () => renderSlotContent(true);
@@ -1253,3 +1265,4 @@ async function initializeFloatingSearch(triggerSelector, panelSelector, validTyp
 document.title = 'Liri: '+translate('compendium', 'titlecase');
 renderSearchContainer();
 renderEntryContainers();
+
