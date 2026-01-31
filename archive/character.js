@@ -161,11 +161,15 @@ export class Character extends Entry {
             else item.reference = archiveEntry.serialize();
         }
         for (const key in this.#equipment) {
+            // Ajustado para acessar o item corretamente conforme a estrutura de classes
             const item = this.#equipment[key].slot;
             if (!item) continue;
             const archiveEntry = await Archive.contains(item.reference.key);
-            if (!archiveEntry) this.#equipment[key].slot = null;
-            else item.reference = archiveEntry.serialize();
+            if (!archiveEntry) {
+                this.#equipment[key].slot = null;
+            } else {
+                item.reference = archiveEntry.serialize();
+            }
         }
     }
 
