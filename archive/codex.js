@@ -24,7 +24,7 @@ export class Codex {
         { name: 'major-actions', attributes: ['breath', 'body'], a: 1/6, b: 1, image: 'major-actions' },
         { name: 'minor-actions', attributes: ['breath', 'body'], a: 1/4, b: 1, image: 'minor-actions' },
         { name: 'reactions', attributes: ['shivers', 'body'], a: 1/4, b: 1, image: 'reactions' },
-        { name: 'movement', attributes: ['agility', 'body'], a: 1, b: 3, image: 'movement' },
+        { name: 'movement', attributes: ['breath', 'body'], a: 1, b: 3, image: 'movement' },
     ]
 
     static CHARACTER_EQUIPMENT = {
