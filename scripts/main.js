@@ -406,10 +406,6 @@ function showDeleteButton() {
     const deleteContainer = document.querySelector('#delete-container');
     if (deleteContainer) deleteContainer.style.display = 'block';
 }
-function hideDeleteButton() {
-    const deleteContainer = document.querySelector('#delete-container');
-    if (deleteContainer) deleteContainer.style.display = 'none';
-}
 
 function renderDescription() {
     const descriptionContainer = document.querySelector('#description-container');
@@ -1083,7 +1079,7 @@ function renderEquipment() {
             const hasDurability = equippedItem && equippedItem.durability !== undefined;
 
             slotRow.innerHTML = `
-                <img src="${iconPath}" class="slot-icon">
+                <img src="${iconPath}" alt="${slotName}" class="slot-icon">
                 <div class="slot-label">${translate(slotName, 'uppercase')}</div>
                 <div class="equipped-item-name" style="cursor: pointer;">
                     ${equippedItem ? equippedItem.reference.name : '<span class="slot-empty">...</span>'}
@@ -1286,8 +1282,6 @@ async function initializeFloatingSearch(triggerSelector, panelSelector, validTyp
     };
 }
 
-// MAIN ----------------------------------------------------------------------------------------------------------------
-
 async function validateCharacterInventory(character) {
     if (character.type !== 'character') return;
 
@@ -1356,7 +1350,7 @@ async function showPreview(e, key) {
 
                 fieldsHTML += `
                     <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                        <img src="../assets/${fieldSchema.image}.png" style="width: 16px; height: 16px; filter: brightness(0.8); margin: 0;">
+                        <img src="../assets/${fieldSchema.image}.png" alt="${fieldName}" style="width: 16px; height: 16px; filter: brightness(0.8); margin: 0;">
                         <span style="font-size: 0.75em; flex: 1; display: flex; align-items: center;">${translate(fieldName, 'uppercase')}</span>
                         <span style="font-size: 0.9em; font-weight: bold; display: flex; align-items: center;">
                             ${displayValue}
@@ -1369,7 +1363,7 @@ async function showPreview(e, key) {
 
     previewPopover.innerHTML = `
         <div class="preview-name">
-            <img src="../images/${entry.type}.png" style="width: 24px; height: 24px; margin: 0;">
+            <img src="../images/${entry.type}.png" alt="${entry.type}" style="width: 24px; height: 24px; margin: 0;">
             <span style="display: flex; align-items: center;">${entry.name.toUpperCase()}</span>
         </div>
         <div style="font-size: 0.8em; opacity: 0.8; line-height: 1.4; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--color-hover); white-space: pre-line;">
@@ -1393,6 +1387,9 @@ function hidePreview() {
     isHoveringPreview = false;
     previewPopover.style.display = 'none';
 }
+
+
+// MAIN ----------------------------------------------------------------------------------------------------------------
 
 let isHoveringPreview = false;
 const previewPopover = document.createElement('div');

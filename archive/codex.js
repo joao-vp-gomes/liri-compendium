@@ -20,12 +20,13 @@ export class Codex {
     static COINS_LIST = ['gold-coins', 'silver-coins', 'bronze-coins', 'iron-coins'];
     static STATUS_LIST = [
         { name: 'integrity', attributes: [], a: 0, b: 3, image: 'integrity'},
-        { name: 'health', attributes: ['constitution', 'body'], a: 4, b: 12, image: 'health'},
-        { name: 'major-actions', attributes: ['breath', 'body'], a: 1/3, b: 1, image: 'major-actions' },
-        { name: 'minor-actions', attributes: ['breath', 'body'], a: 1/2, b: 1, image: 'minor-actions' },
-        { name: 'reactions', attributes: ['shivers', 'body'], a: 1/2, b: 1, image: 'reactions' },
-        { name: 'movement', attributes: ['breath', 'body'], a: 1, b: 2, image: 'movement' },
+        { name: 'health', attributes: ['constitution', 'body'], a: 6, b: 18, image: 'health'},
+        { name: 'major-actions', attributes: ['breath', 'body'], a: 1/6, b: 1, image: 'major-actions' },
+        { name: 'minor-actions', attributes: ['breath', 'body'], a: 1/4, b: 1, image: 'minor-actions' },
+        { name: 'reactions', attributes: ['shivers', 'body'], a: 1/4, b: 1, image: 'reactions' },
+        { name: 'movement', attributes: ['agility', 'body'], a: 1, b: 3, image: 'movement' },
     ]
+
     static CHARACTER_EQUIPMENT = {
         'software': {
             'ability-1': ['ability'],
