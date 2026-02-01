@@ -1,6 +1,5 @@
 // character.js
 import { Entry } from "./entry.js";
-import Archive from "./archive.js";
 import {Codex} from "./codex.js";
 
 export class Character extends Entry {
@@ -151,25 +150,6 @@ export class Character extends Entry {
         if (equip && equip.slot) {
             this.pick(equip.slot);
             equip.slot = null;
-        }
-    }
-
-    async validateInventory() {
-        for (const item of [...this.#bag]) {
-            const archiveEntry = await Archive.contains(item.reference.key);
-            if (!archiveEntry) this.drop(item, -1);
-            else item.reference = archiveEntry.serialize();
-        }
-        for (const key in this.#equipment) {
-            // Ajustado para acessar o item corretamente conforme a estrutura de classes
-            const item = this.#equipment[key].slot;
-            if (!item) continue;
-            const archiveEntry = await Archive.contains(item.reference.key);
-            if (!archiveEntry) {
-                this.#equipment[key].slot = null;
-            } else {
-                item.reference = archiveEntry.serialize();
-            }
         }
     }
 

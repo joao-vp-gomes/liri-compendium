@@ -314,19 +314,13 @@ function clearSearchBar() {
     if (searchInputElement) searchInputElement.value = '';
 }
 
-function searchEntry(entry) {
-    loadEntry(entry);
-    deactivateSearchResults();
-    clearSearchBar();
-    hideSaveButton();
-    showDeleteButton();
+async function searchEntry(entry) {
+    if (!entry) return;
+    window.location.href = `${window.location.pathname}?key=${entry.key}`;
 }
+
 function createNewEntry() {
-    loadEntry(new Weapon());
-    deactivateSearchResults();
-    clearSearchBar();
-    hideSaveButton();
-    hideDeleteButton();
+    window.location.href = window.location.pathname;
 }
 
 
@@ -988,7 +982,7 @@ function renderBag() {
             const hasDurability = itemSlot.durability !== undefined && maxDur !== undefined;
 
             itemRow.innerHTML = `
-                <div class="item-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${reference.name}</div>
+                <div class="item-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">${reference.name}</div>
                 <div class="item-type" style="opacity: 0.5; font-size: 0.85em; text-align: center;">${translate(reference.type, 'uppercase')}</div>
                 <div class="item-quantity-controls" style="display: flex; justify-content: center; align-items: center; gap: 5px;">
                     ${isHovering ? `<button class="quantity-button" data-action="minus" >${(!isStackable || itemSlot.amount <= 1) ? '<i class="fa-solid fa-trash"></i>' : '<'}</button>` : ''}
@@ -1006,7 +1000,21 @@ function renderBag() {
 
             itemRow.querySelector('.item-name').onclick = async (e) => {
                 e.stopPropagation();
-                searchEntry(await Archive.fetch(reference.key));
+                const entry = await Archive.fetch(reference.key);
+                searchEntry(entry);
+            };
+
+            const nameEl = itemRow.querySelector('.item-name');
+
+            nameEl.onmouseenter = (e) => showPreview(e, reference.key);
+            nameEl.onmousemove = (e) => movePreview(e);
+            nameEl.onmouseleave = () => hidePreview();
+
+            nameEl.onclick = async (e) => {
+                e.stopPropagation();
+                hidePreview(); // Fecha a preview ao clicar para navegar
+                const entry = await Archive.fetch(reference.key);
+                searchEntry(entry);
             };
 
             if (isHovering) {
@@ -1077,7 +1085,7 @@ function renderEquipment() {
             slotRow.innerHTML = `
                 <img src="${iconPath}" class="slot-icon">
                 <div class="slot-label">${translate(slotName, 'uppercase')}</div>
-                <div class="equipped-item-name">
+                <div class="equipped-item-name" style="cursor: pointer;">
                     ${equippedItem ? equippedItem.reference.name : '<span class="slot-empty">...</span>'}
                 </div>
                 <div class="durability-area">
@@ -1097,7 +1105,25 @@ function renderEquipment() {
             slotRow.querySelector('.equipped-item-name').onclick = async (e) => {
                 e.stopPropagation();
                 if (equippedItem) {
-                    searchEntry(await Archive.fetch(equippedItem.reference.key));
+                    const entry = await Archive.fetch(equippedItem.reference.key);
+                    searchEntry(entry);
+                }
+            };
+
+            const nameEl = slotRow.querySelector('.equipped-item-name');
+
+            if (equippedItem) {
+                nameEl.onmouseenter = (e) => showPreview(e, equippedItem.reference.key);
+                nameEl.onmousemove = (e) => movePreview(e);
+                nameEl.onmouseleave = () => hidePreview();
+            }
+
+            nameEl.onclick = async (e) => {
+                e.stopPropagation();
+                if (equippedItem) {
+                    hidePreview();
+                    const entry = await Archive.fetch(equippedItem.reference.key);
+                    searchEntry(entry);
                 }
             };
 
@@ -1262,7 +1288,133 @@ async function initializeFloatingSearch(triggerSelector, panelSelector, validTyp
 
 // MAIN ----------------------------------------------------------------------------------------------------------------
 
-document.title = 'Liri: '+translate('compendium', 'titlecase');
+async function validateCharacterInventory(character) {
+    if (character.type !== 'character') return;
+
+    const bagPromises = character.bag.map(async (item) => {
+        const archiveData = await Archive.fetch(item.reference.key);
+        return { item, archiveData };
+    });
+
+    const bagResults = await Promise.all(bagPromises);
+    for (const { item, archiveData } of bagResults) {
+        if (!archiveData) character.drop(item, -1);
+        else item.reference = archiveData.serialize();
+    }
+    const slots = Object.keys(Codex.CHARACTER_EQUIPMENT).reduce((acc, cat) => {
+        return [...acc, ...Object.keys(Codex.CHARACTER_EQUIPMENT[cat])];
+    }, []);
+
+    const equipmentPromises = slots.map(async (slotName) => {
+        const item = character.getEquipmentSlot(slotName);
+        if (!item) return { slotName, item: null, archiveData: null };
+        const archiveData = await Archive.fetch(item.reference.key);
+        return { slotName, item, archiveData };
+    });
+    const equipmentResults = await Promise.all(equipmentPromises);
+    for (const { slotName, item, archiveData } of equipmentResults) {
+        if (!item) continue;
+        if (!archiveData) character.clearEquipmentSlot(slotName);
+        else item.reference = archiveData.serialize();
+    }
+}
+
+async function showPreview(e, key) {
+    isHoveringPreview = true;
+    const entry = await Archive.fetch(key);
+    if (!entry || !isHoveringPreview) return;
+
+    let fieldsHTML = '';
+    const groups = Codex.ENTRY_TYPES[entry.type] || [];
+
+    for (const groupObj of groups) {
+        const fields = groupObj.fields || [];
+        for (const fieldSchema of fields) {
+            const fieldName = fieldSchema.name;
+            const groupName = groupObj.group;
+            const condition = fieldSchema.condition;
+
+            if (condition === 'never') continue;
+
+            const baseValue = Number(entry[fieldName]) || 0;
+            const groupValue = Number(entry[groupName]) || 0;
+            let fieldMod = 0;
+            let groupMod = 0;
+
+            if (typeof entry.gatherModifier === 'function') {
+                fieldMod = Number(entry.gatherModifier(fieldName)) || 0;
+                groupMod = Number(entry.gatherModifier(groupName)) || 0;
+            }
+
+            const totalValue = baseValue + fieldMod + groupValue + groupMod;
+            const isInfinity = totalValue === -1;
+
+            const shouldShow = condition === 'required' || (condition === 'optional' && (totalValue !== 0 || isInfinity));
+
+            if (shouldShow) {
+                const displayValue = isInfinity ? '∞' : totalValue;
+
+                fieldsHTML += `
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                        <img src="../assets/${fieldSchema.image}.png" style="width: 16px; height: 16px; filter: brightness(0.8); margin: 0;">
+                        <span style="font-size: 0.75em; flex: 1; display: flex; align-items: center;">${translate(fieldName, 'uppercase')}</span>
+                        <span style="font-size: 0.9em; font-weight: bold; display: flex; align-items: center;">
+                            ${displayValue}
+                        </span>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    previewPopover.innerHTML = `
+        <div class="preview-name">
+            <img src="../images/${entry.type}.png" style="width: 24px; height: 24px; margin: 0;">
+            <span style="display: flex; align-items: center;">${entry.name.toUpperCase()}</span>
+        </div>
+        <div style="font-size: 0.8em; opacity: 0.8; line-height: 1.4; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--color-hover); white-space: pre-line;">
+            ${entry.description || ''}
+        </div>
+        <div class="preview-fields">
+            ${fieldsHTML}
+        </div>
+    `;
+
+    previewPopover.style.display = 'block';
+    movePreview(e);
+}
+
+function movePreview(e) {
+    previewPopover.style.left = (e.clientX + 20) + 'px';
+    previewPopover.style.top = (e.clientY + 20) + 'px';
+}
+
+function hidePreview() {
+    isHoveringPreview = false;
+    previewPopover.style.display = 'none';
+}
+
+let isHoveringPreview = false;
+const previewPopover = document.createElement('div');
+previewPopover.id = 'preview-popover';
+document.body.appendChild(previewPopover);
+
+document.title = 'Liri: ' + translate('compendium', 'titlecase');
 renderSearchContainer();
+
+const urlParams = new URLSearchParams(window.location.search);
+const entryKey = urlParams.get('key');
+
+if (entryKey) {
+    const entry = await Archive.fetch(entryKey);
+    if (entry) {
+        if (entry.type === 'character') await validateCharacterInventory(entry);
+        loadEntry(entry);
+        hideSaveButton();
+        showDeleteButton();
+    }
+}
+
 renderEntryContainers();
+
 
